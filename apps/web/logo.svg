@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 100 100">
+  <!-- Outer shape -->
+  <rect x="15" y="15" width="70" height="70" rx="20" fill="#111111"/>
+  
+  <!-- I-beam style symbol -->
+  <rect x="47" y="30" width="6" height="40" fill="white"/>
+  <rect x="40" y="30" width="20" height="6" rx="3" fill="white"/>
+  <rect x="40" y="64" width="20" height="6" rx="3" fill="white"/>
+</svg>

@@ -11,18 +11,21 @@
     "test": "echo \"No tests for web yet\""
   },
   "dependencies": {
+    "@repo/shared-types": "workspace:*",
     "next": "15.2.0",
     "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "@repo/shared-types": "workspace:*"
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
     "@repo/tsconfig": "workspace:*",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.4.20",
     "eslint": "^9.21.0",
     "eslint-config-next": "15.2.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3"
   }
 }

@@ -1,0 +1,38 @@
+-- CreateEnum
+CREATE TYPE "AuthProvider" AS ENUM ('local', 'google');
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "avatarUrl" TEXT,
+ADD COLUMN     "isEmailVerified" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "name" TEXT,
+ADD COLUMN     "passwordHash" TEXT,
+ADD COLUMN     "provider" "AuthProvider" NOT NULL DEFAULT 'local',
+ADD COLUMN     "providerId" TEXT;
+
+-- CreateTable
+CREATE TABLE "RefreshToken" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "tokenHash" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "revokedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "replacedByTokenId" TEXT,
+
+    CONSTRAINT "RefreshToken_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "RefreshToken_replacedByTokenId_key" ON "RefreshToken"("replacedByTokenId");
+
+-- CreateIndex
+CREATE INDEX "RefreshToken_userId_tokenHash_idx" ON "RefreshToken"("userId", "tokenHash");
+
+-- CreateIndex
+CREATE INDEX "RefreshToken_userId_revokedAt_idx" ON "RefreshToken"("userId", "revokedAt");
+
+-- AddForeignKey
+ALTER TABLE "RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "RefreshToken" ADD CONSTRAINT "RefreshToken_replacedByTokenId_fkey" FOREIGN KEY ("replacedByTokenId") REFERENCES "RefreshToken"("id") ON DELETE SET NULL ON UPDATE CASCADE;
