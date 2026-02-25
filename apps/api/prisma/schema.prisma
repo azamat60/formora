@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum FormStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  forms Form[]
+}
+
+model Form {
+  id          String      @id @default(cuid())
+  ownerId     String
+  title       String
+  slug        String      @unique
+  status      FormStatus  @default(DRAFT)
+  draftSchema Json
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  owner     User          @relation(fields: [ownerId], references: [id])
+  versions  FormVersion[]
+  responses Response[]
+}
+
+model FormVersion {
+  id          String   @id @default(cuid())
+  formId      String
+  version     Int
+  schema      Json
+  publishedAt DateTime @default(now())
+
+  form      Form       @relation(fields: [formId], references: [id])
+  responses Response[]
+
+  @@unique([formId, version])
+}
+
+model Response {
+  id             String   @id @default(cuid())
+  formId         String
+  formVersionId  String
+  payload        Json
+  createdAt      DateTime @default(now())
+
+  form        Form        @relation(fields: [formId], references: [id])
+  formVersion FormVersion @relation(fields: [formVersionId], references: [id])
+}
