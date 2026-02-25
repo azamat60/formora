@@ -120,7 +120,7 @@ export class AuthService {
     }
 
     await this.issueAuthCookies(user, response);
-    return this.configService.get<string>('WEB_AUTH_SUCCESS_REDIRECT', 'http://localhost:3000/forms');
+    return this.configService.get<string>('WEB_AUTH_SUCCESS_REDIRECT', 'http://localhost:3000/');
   }
 
   async refresh(request: Request, response: Response): Promise<{ user: AuthUser }> {
@@ -350,6 +350,8 @@ export class AuthService {
       email: user.email,
       name: user.name,
       avatarUrl: user.avatarUrl,
+      provider: user.provider,
+      createdAt: user.createdAt.toISOString(),
     };
   }
 }

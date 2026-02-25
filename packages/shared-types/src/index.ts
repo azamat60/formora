@@ -12,6 +12,8 @@ export interface AuthUserDto {
   email: string;
   name: string | null;
   avatarUrl: string | null;
+  provider: AuthProvider;
+  createdAt: string;
 }
 
 export interface AuthResponseDto {

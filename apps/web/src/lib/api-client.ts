@@ -6,6 +6,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     public readonly status: number,
+    public readonly details?: unknown,
   ) {
     super(message);
   }
@@ -23,7 +24,24 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
 
   if (!response.ok) {
-    throw new ApiError(`API request failed: ${response.status}`, response.status);
+    let errorMessage = `API request failed: ${response.status}`;
+    let details: unknown;
+
+    try {
+      const json = (await response.json()) as { message?: string | string[]; error?: string };
+      details = json;
+      if (Array.isArray(json.message) && json.message.length > 0) {
+        errorMessage = json.message[0];
+      } else if (typeof json.message === 'string' && json.message.trim().length > 0) {
+        errorMessage = json.message;
+      } else if (typeof json.error === 'string' && json.error.trim().length > 0) {
+        errorMessage = json.error;
+      }
+    } catch {
+      // Ignore body parse errors and keep generic message.
+    }
+
+    throw new ApiError(errorMessage, response.status, details);
   }
 
   return (await response.json()) as T;

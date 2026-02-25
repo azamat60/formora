@@ -3,4 +3,6 @@ export interface AuthUser {
   email: string;
   name: string | null;
   avatarUrl: string | null;
+  provider: 'local' | 'google';
+  createdAt: string;
 }
